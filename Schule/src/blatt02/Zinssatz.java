@@ -2,7 +2,7 @@ package blatt02;
 
 import java.util.Scanner;
 
-public class Zinssatz2 {
+public class Zinssatz {
     public static void main(String[] args) {
 
         Scanner scannerName = new Scanner(System.in);
