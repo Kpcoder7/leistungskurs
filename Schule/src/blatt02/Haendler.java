@@ -1,16 +1,24 @@
-package blatt01;
+package blatt02;
+
+import  java.util.Scanner;
 
 public class Haendler {
     public static void main(String[] args) {
-        //preise
         double preise_normale = 5.0;
         double preise_mini = 8.0;
         double preise_micro = 12.0;
 
+        //Initialisierung des Scanners
+        Scanner scannerName = new Scanner(System.in);
         //anzahl
-        int anzahl_normale = 3;
-        int anzahl_mini = 6;
-        int anzahl_micro = 7;
+        System.out.println("Wie viele normale SD-Karten 32 GB möchten sie bestellen (5€ pro Stück)");
+        int anzahl_normale = scannerName.nextInt();
+
+        System.out.println("Wie viele mini SD-Karten 32 GB möchten sie bestellen (8€ pro Stück)");
+        int  anzahl_mini = scannerName.nextInt();
+
+        System.out.println("Wie viele micro SD-Karten 32 GB möchten sie bestellen (12€ pro Stück)");
+        int anzahl_micro = scannerName.nextInt();
 
         //Berechnung
         double endpreise_normale = preise_normale*anzahl_normale;
@@ -24,14 +32,5 @@ public class Haendler {
         System.out.println(anzahl_mini + " mini SD Karten");
         System.out.println(anzahl_micro + " microSD Karten");
         System.out.println("...lautet " + endpreis + " €");
-
-        //minimal 10 variablen -> 3 für preise, 3 für Anzahl, 3 für den Preis, und eine endsumme, wenn man allerdings
-        //sehr will, kann man durch kompliziertes coden noch einige wegstreichen
-
-        //double für den Preis, wobei man in dem Fall auch int verwenden könnten, da es keine cent Angaben
-        // gibt, jedoch ist es eleganter bei Geldbeträgen double zu verwenden und int für die Anzahl, es gibt
-        //nämlich keine halben Karten
-
-        //Mein Programm funktioniert so gut, es gibt hier nichts zu befürchten und somit keine Probleme :)
     }
 }

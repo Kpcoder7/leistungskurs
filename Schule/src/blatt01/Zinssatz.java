@@ -8,7 +8,7 @@ public class Zinssatz {
         System.out.printf("Altes Kapital: %.2f", altes_Kapital);
         System.out.print(" €\n");
         System.out.printf("Zinssatz: %.2f", zinssatz);
-        System.out.print(" €\n\n");
+        System.out.print(" %\n\n");
 
         //Zinsberechnung
         double zinsen = altes_Kapital * zinssatz /100;
