@@ -11,15 +11,15 @@ public class Haendler {
         //Initialisierung des Scanners
         Scanner scannerName = new Scanner(System.in);
         //anzahl
-        System.out.println("Wie viele normale SD-Karten 32 GB möchten sie bestellen (5€ pro Stück)");
+        System.out.println("Wie viele normale SD-Karten 32 GB möchten Sie bestellen? (5 € pro Stück)");
         int anzahl_normale = scannerName.nextInt();
 
-        System.out.println("Wie viele mini SD-Karten 32 GB möchten sie bestellen (8€ pro Stück)");
-        int  anzahl_mini = scannerName.nextInt();
+        System.out.println("Wie viele MiniSD-Karten 32 GB möchten Sie bestellen? (8 € pro Stück)");
+        int anzahl_mini = scannerName.nextInt();
 
-        System.out.println("Wie viele micro SD-Karten 32 GB möchten sie bestellen (12€ pro Stück)");
+        System.out.println("Wie viele MicroSD-Karten 32 GB möchten Sie bestellen? (12 € pro Stück)");
         int anzahl_micro = scannerName.nextInt();
-
+        //Todo: Abfangen von - Zahlen bei der Anzahl
         //Berechnung
         double endpreise_normale = preise_normale*anzahl_normale;
         double endpreise_mini = preise_mini*anzahl_mini;
@@ -28,9 +28,9 @@ public class Haendler {
         double endpreis = endpreise_normale+endpreise_mini+endpreise_micro;
 
         System.out.println("Der Preis für...");
-        System.out.println(anzahl_normale + " normale SD Karten");
-        System.out.println(anzahl_mini + " mini SD Karten");
-        System.out.println(anzahl_micro + " microSD Karten");
+        System.out.println(anzahl_normale + " normale SD-Karten");
+        System.out.println(anzahl_mini + " MiniSD-Karten");
+        System.out.println(anzahl_micro + " MicroSD-Karten");
         System.out.println("...lautet " + endpreis + " €");
     }
 }
