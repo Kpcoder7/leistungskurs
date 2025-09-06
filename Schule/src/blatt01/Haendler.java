@@ -8,9 +8,9 @@ public class Haendler {
         double preise_micro = 12.0;
 
         //anzahl
-        int anzahl_normale = 3;
-        int anzahl_mini = 6;
-        int anzahl_micro = 7;
+        int anzahl_normale = 9;
+        int anzahl_mini = 5;
+        int anzahl_micro = 0;
 
         //Berechnung
         double endpreise_normale = preise_normale*anzahl_normale;
@@ -19,19 +19,27 @@ public class Haendler {
 
         double endpreis = endpreise_normale+endpreise_mini+endpreise_micro;
 
+        //Ausgabe
         System.out.println("Der Preis für...");
-        System.out.println(anzahl_normale + " normale SD Karten");
-        System.out.println(anzahl_mini + " mini SD Karten");
-        System.out.println(anzahl_micro + " microSD Karten");
+        System.out.println(anzahl_normale + " normale SD-Karten");
+        System.out.println(anzahl_mini + " MiniSD-Karten");
+        System.out.println(anzahl_micro + " MicroSD-Karten");
         System.out.println("...lautet " + endpreis + " €");
 
-        //minimal 10 variablen -> 3 für preise, 3 für Anzahl, 3 für den Preis, und eine endsumme, wenn man allerdings
-        //sehr will, kann man durch kompliziertes coden noch einige wegstreichen
+        /*
+        Einfacher Fall: 10 variablen → 3 für preise, 3 für Anzahl, 3 für den Preis, und eine endsumme
+        Mittelschwer: 3 Anzahl variablen. Danach berechnet man in einer langen Kette den Endpreis so:
+        die Anzahl * Preis + Anzahl * Preis + Anzahl * Preis.
+        Für die einzelnen Preise reicht Anzahl * Preis.
+        Schwer: 0. Man legt es direkt in der Printausgabe fest: System.out.println(9 + " normale SD-Karten");
+        System.out.println("...lautet " + ((9*5) + (5*8) + (0*0) + ".0 €"));
+        */
 
         //double für den Preis, wobei man in dem Fall auch int verwenden könnten, da es keine cent Angaben
-        // gibt, jedoch ist es eleganter bei Geldbeträgen double zu verwenden und int für die Anzahl, es gibt
+        //gibt, jedoch ist es eleganter bei Geldbeträgen double zu verwenden und int für die Anzahl, es gibt
         //nämlich keine halben Karten
 
         //Mein Programm funktioniert so gut, es gibt hier nichts zu befürchten und somit keine Probleme :)
+        //theoretisch könnte es bei bestimmten Anzahlen zu langen Nachkommastellen kommen → Runden
     }
 }

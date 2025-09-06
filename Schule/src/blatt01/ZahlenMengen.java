@@ -12,6 +12,6 @@ public class ZahlenMengen {
         System.out.println(b);
 
         // Bei a kommt 2 raus, bei b kommt 2.5 raus
-        // Grund: Int (a) hat keine Option Nachkommazahlen anzuzeigen, double (b) schon
+        // Grund: int (a) hat keine Option Nachkommazahlen anzuzeigen, bzw. zu speichern, double (b) schon
     }
 }

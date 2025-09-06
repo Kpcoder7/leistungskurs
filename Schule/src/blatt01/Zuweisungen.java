@@ -3,7 +3,7 @@ package blatt01;
 public class Zuweisungen {
     public static void main(String[] args) {
         int a = 7;
-        int b = 7;
+        int b = a;
 
         a = a + 3;
         a = a * 4;
@@ -12,9 +12,12 @@ public class Zuweisungen {
         a = a - b * 2;
         System.out.println(a);
 
-        // 5 Rechenoperatoren
-        // Es ist stets 2, da es jedes mal durch das zusammenspiel von Multiplikation, Divison, Addition und Subtraktion
-        // auf einen Wert um 2 höher als das doppelte vom ursprünglichen Wert gebracht wird und dann um das doppelte des
-        // ursprungswertes abgezogen wird.
+        // 6 Rechenoperatoren
+
+        /*
+        Am Ende kommt immer das Doppelte von (a - b) heraus,
+        und dazu wird noch 2 addiert.
+        Wenn a und b gleich sind, kommt also immer 2 raus.
+        */
     }
 }

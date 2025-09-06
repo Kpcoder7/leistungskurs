@@ -17,8 +17,10 @@ public class TypKonversion {
         int g = (int) e;
         char h = (char)f;
 
-        //boolean t = true;
-        //h = (char) t;
+        /*
+        boolean t = true;
+        h = (char) t;
+        */
 
         System.out.println(g);
         System.out.println(h);
@@ -30,17 +32,21 @@ public class TypKonversion {
         //Es wird 97 ausgegeben erwartet e?
         //Es wird A ausgegeben erwartet 65?
 
-        //ich vermute, dass an dieser stelle der Wert von double in ein Int konvertiert wird und Int in double, sodass
-        //die kommazahlen gestrichen werden an der einen Stelle und an der anderen welche hinzugefügt werden
-        //unten ist es das gleiche (17,18), nur dass es an dieser Stelle mit Zahlenwert zu Buchstabe (char) passiert,
-        //sowie Buchstabe (char) zu Zahlenwert. Konvertierung an der Stelle nach ASCII Tabelle
+        /*
+        Ich vermute, dass an dieser Stelle der Wert von double in ein int konvertiert wird und int in double, sodass
+        die Kommazahlen gestrichen werden an der einen Stelle und an der anderen welche hinzugefügt werden,
+        unten ist es das Gleiche (l. 17,18), nur dass es an dieser Stelle mit Zahlenwert zu Buchstabe (char) passiert,
+        sowie Buchstabe (char) zu Zahlenwert. Konvertierung an der Stelle nach ASCII-Tabelle
+         */
 
-        //Aufgabenstellung nicht ganz klar... Beide speichern einen Zahlenwert?
+        //Aufgabenstellung nicht ganz klar ... Beide speichern einen Zahlenwert?
 
-        //Aufgabenstellung nicht ganz klar... ASCII Tabelle? Zahl 65 = A innerhalb der Tabelle? e = 97 innerhalb der Tabelle?
-        //Art übersetzung von Zahl zu Buchstabe und Buchstabe zu Zahl
+        //Aufgabenstellung nicht ganz klar ... ASCII-Tabelle? Zahl 65 = A innerhalb der Tabelle? e = 97 innerhalb der Tabelle?
+        //Art Übersetzung von Zahl zu Buchstabe und Buchstabe zu Zahl
 
         //Inconvertible types; cannot cast 'boolean' to 'char'? Funktioniert nicht
+        //true / false wird nicht unterstützt in einen anderen Datentypen konvertieren zu lassen
+
 
     }
 }
