@@ -83,7 +83,9 @@ public class Notenrechner {
 
         double prozentZahl = gesamtPunktzahl / hoechstPunktzahl * 100.0;
         System.out.println("Gesamte Punktzahl: " + gesamtPunktzahl + " von " + hoechstPunktzahl + " Punkten");
-        System.out.println("Prozent: " + prozentZahl + " %");
+        System.out.println();
+        System.out.printf("Prozent: %.2f", prozentZahl);
+        System.out.println(" %");
 
         if (prozentZahl >= 85.0) {
             System.out.println("Somit wurde nach MSS Tabelle die Note 1 erreicht");
@@ -105,7 +107,7 @@ public class Notenrechner {
         }
 
         if (prozentZahl == 100.0) {
-            System.out.println("Herzlichen Glückwunsch, es wurde volle Punktzahl erreicht");
+            System.out.println("Herzlichen Glückwunsch, es wurde die volle Punktzahl erreicht");
         }
 
         /*

@@ -7,20 +7,20 @@ public class PQAllgemein {
         Scanner scannerName = new Scanner(System.in);
 
         System.out.println("Willkommen im pq Lösungstool!");
-        System.out.println("Befolgen Sie den Anweisungen und geben sie Gleitkommazahlen ein.");
+        System.out.println("Befolgen Sie den Anweisungen und geben Sie Gleitkommazahlen ein.");
         System.out.println("Erwartete Form der gleichung ist die Normalform (a * x^2 + b * x + c = d)");
 
         //Einholung der Variablen
-        System.out.println("Bitte geben sie nun a ein:");
+        System.out.println("Bitte geben Sie nun a ein:");
         double a = scannerName.nextDouble();
 
-        System.out.println("Bitte geben sie nun b ein:");
+        System.out.println("Bitte geben Sie nun b ein:");
         double b = scannerName.nextDouble();
 
-        System.out.println("Bitte geben sie nun c ein:");
+        System.out.println("Bitte geben Sie nun c ein:");
         double c = scannerName.nextDouble();
 
-        System.out.println("Bitte geben sie nun d ein:");
+        System.out.println("Bitte geben Sie nun d ein:");
         double d = scannerName.nextDouble();
 
         //Normalisierung der quadratischen Gleichung

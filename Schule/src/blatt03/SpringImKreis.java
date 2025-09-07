@@ -8,10 +8,10 @@ public class SpringImKreis {
 
         double kreisRadius = 7;
 
-        System.out.println("Nenne mir eine beliebige x-Koordinate");
+        System.out.println("Nennen Sie eine beliebige x-Koordinate");
         double xKoordinate = scannerName.nextDouble();
 
-        System.out.println("Nenne mir eine beliebige y-Koordinate");
+        System.out.println("Nennen Sie eine beliebige y-Koordinate");
         double yKoordinate = scannerName.nextDouble();
 
         double koordinateNachP = xKoordinate * xKoordinate + yKoordinate * yKoordinate;
@@ -19,15 +19,13 @@ public class SpringImKreis {
 
         //Pythagoras Berechnung
         if (radius <= kreisRadius) {
-            System.out.println("Es ist im Kreis");
+            System.out.println("Der Punkt liegt im Kreis");
         }
         else if (radius == kreisRadius) {
-            System.out.println("Es auf dem Kreisrand");
+            System.out.println("Der Punkt liegt auf dem Kreisrand");
         }
         else {
-            System.out.println("Es ist nicht im Kreis");
+            System.out.println("Der Punkt liegt nicht im Kreis");
         }
-
-
     }
 }

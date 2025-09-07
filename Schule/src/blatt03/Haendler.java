@@ -12,8 +12,9 @@ public class Haendler {
 
         //Initialisierung des Scanners
         Scanner scannerName = new Scanner(System.in);
-        //anzahl
-        System.out.println("Wie viele normale SD-Karten 32 GB möchten sie bestellen? (5 € pro Stück)");
+
+        //Anzahl Eingabe
+        System.out.println("Wie viele normale SD-Karten 32 GB möchten Sie bestellen? (5 € pro Stück)");
         int anzahl_normale = scannerName.nextInt();
         if (anzahl_normale < 0) {
             System.out.println("Der Wert muss 0 oder mehr Betragen!");
@@ -21,11 +22,11 @@ public class Haendler {
         }
         else if (anzahl_normale > 50) {
             anzahl_normale = 50;
-            System.out.println("Es dürfen höchstens 50 je Art bestellt werden! Wir haben Ihnen automatisch die Anzahl auf 50 angepasst.");
+            System.out.println("Es dürfen höchstens 50 Karten je Art bestellt werden! Wir haben Ihnen automatisch die Anzahl auf 50 angepasst.");
         }
 
 
-        System.out.println("Wie viele mini SD-Karten 32 GB möchten sie bestellen? (8 € pro Stück)");
+        System.out.println("Wie viele MiniSD-Karten 32 GB möchten Sie bestellen? (8 € pro Stück)");
         int  anzahl_mini = scannerName.nextInt();
         if (anzahl_mini < 0) {
             System.out.println("Der Wert muss 0 oder mehr Betragen!");
@@ -33,11 +34,11 @@ public class Haendler {
         }
         else if (anzahl_mini > 50) {
             anzahl_mini = 50;
-            System.out.println("Es dürfen höchstens 50 je Art bestellt werden! Wir haben Ihnen automatisch die Anzahl auf 50 angepasst.");
+            System.out.println("Es dürfen höchstens 50 Karten je Art bestellt werden! Wir haben Ihnen automatisch die Anzahl auf 50 angepasst.");
         }
 
 
-        System.out.println("Wie viele micro SD-Karten 32 GB möchten sie bestellen? (12 € pro Stück)");
+        System.out.println("Wie viele MicroSD-Karten 32 GB möchten Sie bestellen? (12 € pro Stück)");
         int anzahl_micro = scannerName.nextInt();
         if (anzahl_micro < 0) {
             System.out.println("Der Wert muss 0 oder mehr Betragen!");
@@ -45,7 +46,7 @@ public class Haendler {
         }
         else if (anzahl_micro > 50) {
             anzahl_micro = 50;
-            System.out.println("Es dürfen höchstens 50 je Art bestellt werden! Wir haben Ihnen automatisch die Anzahl auf 50 angepasst.");
+            System.out.println("Es dürfen höchstens 50 Karten je Art bestellt werden! Wir haben Ihnen automatisch die Anzahl auf 50 angepasst.");
         }
 
 
@@ -56,7 +57,7 @@ public class Haendler {
 
         double endpreis = endpreise_normale+endpreise_mini+endpreise_micro;
 
-        //Rabatt
+        //Rabatt + Ausgabe
         if (anzahl_normale + anzahl_mini + anzahl_micro > 15) {
             double rabatt = endpreis * 0.15;
             double rabattPreis = endpreis - rabatt;
@@ -66,9 +67,9 @@ public class Haendler {
             System.out.println();
         }
         System.out.println("Der Preis für...");
-        System.out.println(anzahl_normale + " normale SD Karten");
-        System.out.println(anzahl_mini + " miniSD Karten");
-        System.out.println(anzahl_micro + " microSD Karten");
+        System.out.println(anzahl_normale + " normale SD-Karten");
+        System.out.println(anzahl_mini + " MiniSD-Karten");
+        System.out.println(anzahl_micro + " MicroSD-Karten");
         System.out.println("...lautet " + endpreis + " €");
 
     }

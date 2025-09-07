@@ -7,7 +7,7 @@ public class MitOderOhneStrom {
         //Initialisierung des Scanners
         Scanner scannerName = new Scanner(System.in);
 
-        System.out.println("Bitte wählen sie eines dieser Gatter aus: NOT, OR, AND, XOR");
+        System.out.println("Bitte wählen Sie eines dieser Gatter aus: NOT, OR, AND, XOR");
         String gatterTyp = scannerName.next();
 
         if  (!gatterTyp.equals("NOT") && !gatterTyp.equals("OR") && !gatterTyp.equals("AND") && !gatterTyp.equals("XOR")) {

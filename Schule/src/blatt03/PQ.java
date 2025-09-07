@@ -9,12 +9,12 @@ public class PQ {
 
         //Information
         System.out.println("Willkommen im pq Lösungstool!");
-        System.out.println("Befolgen Sie den Anweisungen und geben sie Gleitkommazahlen ein.");
+        System.out.println("Befolgen Sie den Anweisungen und geben Sie Gleitkommazahlen ein.");
         System.out.println("Erwartete Form der gleichung ist die Normalform (x^2 + p * x + q = 0)");
         //Eingabe
-        System.out.println("Bitte geben sie nun p ein:");
+        System.out.println("Bitte geben Sie nun p ein:");
         double p = scannerName.nextDouble();
-        System.out.println("Bitte geben sie nun q ein:");
+        System.out.println("Bitte geben Sie nun q ein:");
         double q = scannerName.nextDouble();
 
         if (((p/2)*(p/2) - q) < 0) {
@@ -23,8 +23,10 @@ public class PQ {
         }
 
         //Rechnung
-        double x1 = -(p/2) + Math.sqrt((p/2)*(p/2) - q);
-        double x2 = -(p/2) - Math.sqrt((p/2)*(p/2) - q);
+        double wurzel =  Math.sqrt((p/2)*(p/2) - q);
+
+        double x1 = -(p/2) + wurzel;
+        double x2 = -(p/2) - wurzel;
 
         if (((p/2)*(p/2) - q) == 0) {
             System.out.println("In diesem Fall hier gibt es nur eine Lösung. x = 0");
