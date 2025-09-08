@@ -11,7 +11,7 @@ public class Notenrechner {
         System.out.println("Willkommen im Notenberechnungstool!");
         System.out.println("Bitte geben Sie ganz Zahlen im positiven Bereich ein");
 
-
+        /*
         //Einholung der benötigten Informationen
         System.out.println("Bitte geben Sie die maximal zu erreichende Anzahl der Punkte, der ersten Aufgabe ein");
         int aufgabe1MaxPunkte = scannerName.nextInt();
@@ -80,6 +80,20 @@ public class Notenrechner {
 
         double hoechstPunktzahl = aufgabe1MaxPunkte + aufgabe2MaxPunkte + aufgabe3MaxPunkte + aufgabe4MaxPunkte + aufgabe5MaxPunkte;
         double gesamtPunktzahl = aufgabe1Punkte + aufgabe2Punkte + aufgabe3Punkte + aufgabe4Punkte + aufgabe5Punkte;
+        */
+
+        System.out.println("Bitte geben Sie die maximal zu erreichende Anzahl an Punkten ein");
+        int gesamtPunktzahl = scannerName.nextInt();
+        System.out.println("Bitte geben Sie die erreichte Anzahl der Punkte ein");
+        int hoechstPunktzahl = scannerName.nextInt();
+        if (gesamtPunktzahl <= 0 || hoechstPunktzahl <= 0) {
+            System.out.println("Die Zahl muss größer als Null sein und somit im positiven Bereich liegen!");
+            System.exit(0);
+        }
+        else if (hoechstPunktzahl > gesamtPunktzahl) {
+            System.out.println("Es gab nur " + gesamtPunktzahl + " Punkte zu erreichen!");
+            System.exit(0);
+        }
 
         double prozentZahl = gesamtPunktzahl / hoechstPunktzahl * 100.0;
         System.out.println("Gesamte Punktzahl: " + gesamtPunktzahl + " von " + hoechstPunktzahl + " Punkten");
@@ -109,27 +123,5 @@ public class Notenrechner {
         if (prozentZahl == 100.0) {
             System.out.println("Herzlichen Glückwunsch, es wurde die volle Punktzahl erreicht");
         }
-
-        /*
-        //Infotext
-        System.out.println("Willkommen im Notenberechnungstool!");
-        System.out.println("So gehen sie vor:");
-        System.out.println("Schritt 1: Geben Sie die Anzahl der Aufgaben ein");
-        System.out.println("Schritt 2: Geben sie nach und nach von Aufgabe 1 - Aufgabe x die Punktzahl der Aufgabe ein");
-        System.out.println();
-        //Einholung der benötigten Informationen
-        System.out.println("Bitte geben Sie die Anzahl der Aufgaben ein");
-            //Berechnung der einzelnen Aufgaben anzahlen
-            int aufgabenAnzahl = scannerName.nextInt();
-
-
-        System.out.println("Bitte geben Sie hier die Punktzahl der ersten Aufgabe ein: ");
-
-
-        //Berechnung der Note
-
-
-        //Ausgabe der Note
-        */
     }
 }

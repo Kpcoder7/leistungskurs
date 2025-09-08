@@ -8,7 +8,7 @@ public class PQAllgemein {
 
         System.out.println("Willkommen im pq Lösungstool!");
         System.out.println("Befolgen Sie den Anweisungen und geben Sie Gleitkommazahlen ein.");
-        System.out.println("Erwartete Form der gleichung ist die Normalform (a * x^2 + b * x + c = d)");
+        System.out.println("Erwartete Form der Gleichung ist die Normalform (a * x^2 + b * x + c = d)");
 
         //Einholung der Variablen
         System.out.println("Bitte geben Sie nun a ein:");
@@ -74,8 +74,8 @@ public class PQAllgemein {
         else {
             //Ausgabe der Ergebnisse
             System.out.println("Lösungen für x: 2");
-            System.out.println("X1: " + x1);
-            System.out.println("X2: " + x2);
+            System.out.printf("X1: %.3f \n", x1);
+            System.out.printf("X2: %.3f", x2);
         }
     }
 }
