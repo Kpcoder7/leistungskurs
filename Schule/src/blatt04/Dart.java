@@ -21,11 +21,29 @@ public class Dart {
         Scanner scanner = new Scanner(System.in); //Erzeuge Scanner
 
         int punkte = 501; //Variable "punkte" mit 501 initialisiert -->Startwert
+        int runde = 0;
+        while(true) {
+            System.out.println("Gebe deine Punktzahl ein (0-180)");
+            int wurf = scanner.nextInt(); //Setzt die Variable "wurf" auf den eingegebenen Wert (Es kann angenommen, dass nur gültige Werte eingegeben werden)
+            if (wurf > 180 || wurf < 0) {
+                System.out.println("Es können bei einem Wurf maximal 0 - 180 Punkte erreicht werden");
+                System.exit(0);
+            }
 
-        System.out.println("Gebe deine Punktzahl ein (0-180)");
-        int wurf = scanner.nextInt(); //Setzt die Variable "wurf" auf den eingegebenen Wert (Es kann angenommen, dass nur gültige Werte eingegeben werden)
+            if (punkte > wurf) {
+                punkte -= wurf;
+            } else if (punkte < wurf) {
+                System.out.println("Nichts wird abgezogen. Die geworfene Punktzahl ist größer als noch Punkte da sind!");
+            }
+            else {
+                break;
+            }
+            System.out.println("Deine Punktzahl: " + punkte);
 
+            runde += 1;
+        }
 
-
+        System.out.println("Herzlichen Glückwunsch, Du hast gewonnen!");
+        System.out.println("Punktzahl: " + punkte);
     }
 }
