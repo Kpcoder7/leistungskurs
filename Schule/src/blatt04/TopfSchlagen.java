@@ -1,6 +1,5 @@
 package blatt04;
 
-import java.sql.SQLOutput;
 import java.util.Scanner;
 import java.util.Random;
 
