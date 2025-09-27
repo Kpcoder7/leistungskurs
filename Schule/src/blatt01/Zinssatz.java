@@ -17,7 +17,7 @@ public class Zinssatz {
 
         //Neues Kapital
         double neues_Kapital = altes_Kapital + zinsen;
-        System.out.println("Zinsen:"+ zinsen + " €");
+        System.out.println("Zinsen: "+ zinsen + " €");
         System.out.println("Neues Kapital: " + neues_Kapital + " €");
     }
 }
