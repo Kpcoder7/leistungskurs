@@ -1,4 +1,4 @@
-package blatt06;
+package blatt05;
 
 import java.util.Scanner;
 

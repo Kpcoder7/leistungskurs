@@ -6,9 +6,9 @@ public class GrenzenSetzen {
     public static void main(String[] args) {
         Scanner input = new Scanner(System.in);
 
-        System.out.println("Gebe eine Obergrenze ein:");
+        System.out.println("Geben Sie eine Obergrenze ein:");
         int o = input.nextInt();
-        System.out.println("Gebe eine Untergrenze ein:");
+        System.out.println("Geben Sie eine Untergrenze ein:");
         int u = input.nextInt();
 
         int[] zahlen = new int[o - u + 1];

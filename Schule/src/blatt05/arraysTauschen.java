@@ -1,4 +1,4 @@
-package blatt06;
+package blatt05;
 
 public class arraysTauschen {
     public static void main(String[] args) {
