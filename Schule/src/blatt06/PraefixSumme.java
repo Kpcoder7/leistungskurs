@@ -13,17 +13,19 @@ public class PraefixSumme {
             schaetzDirekt[i] = (x[i] + x[i+1] + x[i+2] + x[i+3]) / 4.0;
         }
 
-        // b) Exklusive Präfixsummen
-        double[] prae = new double[n + 1];
-        prae[0] = 0;
+        //b) Praeffizsummen
+        double[] prae = new double[n + 1];  // Platz für N+1 Werte
+        prae[0] = 0;  // Startwert
+
+        // Fülle das Array prae
         for (int i = 1; i <= n; i++) {
-            prae[i] = prae[i-1] + x[i-1];
+            prae[i] = prae[i - 1] + x[i - 1];
         }
 
-        // c) Schaetz-Array mit Hilfe von praefix
-        double[] schaetzPrae = new double[n - 3];
-        for (int i = 0; i < n - 3; i++) {
-            schaetzPrae[i] = (prae[i+4] - prae[i]) / 4.0;
-        }
+        /* c)
+        Bei der direkten Methode muss man für jeden Wert 4 Zahlen zusammenzählen.
+        Bei der Präfixmethode rechnet man zuerst einmal alle Zwischensummen aus und braucht danach nur noch eine einfache Rechnung pro Wert.
+        Darum ist die Präfixmethode insgesamt schneller, besonders wenn es viele Daten gibt.
+         */
     }
 }
