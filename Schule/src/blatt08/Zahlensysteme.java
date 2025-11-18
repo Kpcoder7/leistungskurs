@@ -1,18 +1,41 @@
 package blatt08;
 
 public class Zahlensysteme {
+    /**
+     * Prüft, ob die übergebene Zahl im Binärsystem vorliegt.
+     * Erwartet Format: (Ziffern 0 und 1)2, z. B. "(1011 0111 1100)2"
+     * @param zahl die Zahl als String
+     * @return true, wenn Binärzahl korrekt formatiert, sonst false
+     */
     public static boolean istBinaer(String zahl) {
         return zahl.matches("\\([01 ]+\\)2");
     }
 
+    /**
+     * Prüft, ob die übergebene Zahl im Hexadezimalsystem vorliegt.
+     * Erwartet Format: (Ziffern 0-9 und Buchstaben A-F)16, z. B. "(B7C)16"
+     * @param zahl die Zahl als String
+     * @return true, wenn Hexadezimalzahl korrekt formatiert, sonst false
+     */
     public static boolean istHexadezimal(String zahl) {
         return zahl.matches("\\([0-9A-Fa-f]+\\)16");
     }
 
+    /**
+     * Prüft, ob die übergebene Zahl im Dezimalsystem vorliegt.
+     * @param zahl die Zahl als String
+     * @return true, wenn nur Ziffern enthalten, sonst false
+     */
     public static boolean istDezimal(String zahl) {
         return zahl.matches("[0-9]+");
     }
 
+    /**
+     * Wandelt die übergebene Zahl (Binär, Hexadezimal oder Dezimal) in eine Dezimalzahl um.
+     * @param zahl die Zahl als String
+     * @return die Zahl als int im Dezimalsystem
+     * @throws IllegalArgumentException wenn die Eingabe ungültig ist
+     */
     public static int zuDezimal(String zahl) {
         int dezi = 0;
         int potenz = 1;

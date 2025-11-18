@@ -3,6 +3,11 @@ package blatt08;
 import java.util.Arrays;
 
 public class Palindrom {
+    /**
+     * Dreht eine übergebene Zahlenfolge um, sodass das erste Element zum letzten wird usw.
+     * @param zeichenfolge Das Array, das umgedreht werden soll
+     * @return Ein neues Array, das die umgedrehte Reihenfolge enthält
+     */
     public static int[] umdrehen (int[] zeichenfolge) {
         int[] umgedreht = new int[zeichenfolge.length];
 
@@ -13,6 +18,12 @@ public class Palindrom {
         return umgedreht;
     }
 
+    /**
+     * Prüft, ob eine Zahlenfolge ein Palindrom ist, also vorwärts und rückwärts gleich.
+     * @param zeichenfolge Das ursprüngliche Array
+     * @param umgedreht Das umgedrehte Array zum Vergleichen
+     * @return true, wenn beide Arrays gleich sind, sonst false
+     */
     public static boolean istPalindrom (int[] zeichenfolge, int[] umgedreht) {
         boolean ergebnis = true;
 
