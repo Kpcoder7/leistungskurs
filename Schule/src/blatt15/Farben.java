@@ -1,6 +1,8 @@
 package blatt15;
 
 import schisch_visualizer. *;
+import java.util.List;
+import java.util.ArrayList;
 
 public class Farben {
 
@@ -10,13 +12,17 @@ public class Farben {
     static int[] spielerPosY  = new int[8];
     static int[] reihenfolge;
 
-    static int laenge = 20;
-    static int breite = 20;
+    static int laenge = 40;
+    static int breite = 40;
 
     static int[][] teamHeatmap = new int[laenge][breite];
-    static boolean heatmapFertig = false;
+    static boolean flaechePushen = true;
+    static boolean gegnerJagen = false;
+    static boolean search = false;
 
-
+    static int searchCount = 0;
+    static int gegegnerJagenCount = 0;
+    static int flaechePushenCount = 0;
 
 
     //Standard logik
@@ -103,44 +109,35 @@ public class Farben {
      * @param b Int variable für die Breite des Spielfelds
      */
     public static void respawn(int spieler, int l, int b) {
-        //Team erkennung
-        char team = '0';
-        if (spieler >= 0 && spieler < 4) {
-            team = 'P';
-        }
-        else if (spieler >= 4 && spieler < 8) {
-            team = 'O';
-        }
+        // Team erkennen
+        char team = (spieler < 4) ? 'P' : 'O';
 
-        //Prüfung, ob das Team noch Felder hat
-        if((zaehle(team) - 4) > 0) {
-            int feld = blatt13.Zufall.zufallGanz(zaehle(team), 0);
-            int[] x = new int[feld];
-            int[] y = new int[feld];
-            int counter = 0;
-            if(team == 'P') {
-                for (int i = 0; i < spielfeld.length; i++) {
-                    for (int j = 0; j < spielfeld[i].length; j++) {
-                        if (spielfeld[i][j] == '7' || spielfeld[i][j] == '9') {
-                            x[counter] = i;
-                            y[counter] = j;
-                        }
-                    }
+        // Alle möglichen Team-Felder sammeln
+        List<int[]> felder = new ArrayList<>();
+
+        for (int i = 0; i < spielfeld.length; i++) {
+            for (int j = 0; j < spielfeld[i].length; j++) {
+                if ((team == 'P' && (spielfeld[i][j] == '7' || spielfeld[i][j] == '9')) ||
+                        (team == 'O' && (spielfeld[i][j] == '3' || spielfeld[i][j] == '9'))) {
+                    felder.add(new int[]{i, j});
                 }
             }
-
-            int spawnFeld = blatt13.Zufall.zufallGanz(counter, 0);
-            spielerPosX[spieler] = x[spawnFeld];
-            spielerPosY[spieler] = y[spawnFeld];
-        }
-        else {
-            int x = blatt13.Zufall.zufallGanz(l-2, 1);
-            int y = blatt13.Zufall.zufallGanz(b-2, 1);
-            spielfeld[x][y] = team;
-            spielerPosX[spieler] = x;
-            spielerPosY[spieler] = y;
         }
 
+        // Wenn Team-Felder vorhanden sind, wähle eines zufällig
+        if (!felder.isEmpty()) {
+            int spawnIndex = blatt13.Zufall.zufallGanz(felder.size() - 1, 0); // 0 bis felder.size()-1
+            int[] spawn = felder.get(spawnIndex);
+            spielerPosX[spieler] = spawn[0];
+            spielerPosY[spieler] = spawn[1];
+        } else {
+            // Fallback: zufälliges Feld auf dem Spielfeld
+            int rx = blatt13.Zufall.zufallGanz(l - 2, 1);
+            int ry = blatt13.Zufall.zufallGanz(b - 2, 1);
+            spielfeld[rx][ry] = team;
+            spielerPosX[spieler] = rx;
+            spielerPosY[spieler] = ry;
+        }
     }
 
     //Spiellogik
@@ -149,31 +146,28 @@ public class Farben {
      * @return Zurückgabe des Strings mit der Reihenfolge als Zahlen in Form von "12345667"
      */
     public static String reihenfolge() {
-        String reihenfolgeString = "";
+        int[] reihenfolgeArr = new int[8];
 
-        //Variablen
-        int zahlspeicher = 0;
-        int reihenfolgeArr[] = new int[8];
-
-        //Zufalls Reihenfolge generierung
-        for (int i = 0; i < 7; i++) {
-            zahlspeicher = blatt13.Zufall.zufallGanz(0, 8);
-            for (int j = 0; j < 7; j++) {
-                if (reihenfolgeArr[j] != zahlspeicher) {
-                    reihenfolgeArr[j] = zahlspeicher;
-                } else if (reihenfolgeArr[j] == zahlspeicher) {
-                    i--;
-                    break;
-                }
-            }
+        // Initial Array 0..7
+        for (int i = 0; i < 8; i++) {
+            reihenfolgeArr[i] = i;
         }
 
-        //Konvertierung für int[] zu ""
-        for (int i : reihenfolgeArr) {
-            reihenfolgeString += i;
+        // Fisher-Yates Shuffle
+        for (int i = 7; i > 0; i--) {
+            int j = blatt13.Zufall.zufallGanz(0, i + 1); // zufälliger Index zwischen 0..i
+            // tausche reihenfolgeArr[i] und reihenfolgeArr[j]
+            int temp = reihenfolgeArr[i];
+            reihenfolgeArr[i] = reihenfolgeArr[j];
+            reihenfolgeArr[j] = temp;
         }
 
-        //rückgabe des Strings
+        // Array zu String
+        StringBuilder sb = new StringBuilder();
+        for (int i : reihenfolgeArr) sb.append(i);
+
+        String reihenfolgeString = sb.toString();
+        System.out.println("Reihenfolge: " + reihenfolgeString);
         return reihenfolgeString;
     }
 
@@ -182,20 +176,20 @@ public class Farben {
      * @param spielerNummer
      */
     public static void zugEins(int spielerNummer) {
-        // Konfiguration: Sichtbarkeit der Feldfarben im 2-Block-Radius
+// Konfiguration: Sichtbarkeit der Feldfarben im 2-Block-Radius
         boolean feldfarbenSichtbar = true;
 
-        // Team-Zugehörigkeit ermitteln
+// Team-Zugehörigkeit ermitteln
         char eigenesTeam = (spielerNummer < 4) ? 'P' : 'O';
         char eigenesFarbe = (spielerNummer < 4) ? '7' : '9';
         char gegnerTeam = (spielerNummer < 4) ? 'O' : 'P';
         char gegnerFarbe = (spielerNummer < 4) ? '9' : '7';
 
-        // Aktuelle Position des Spielers
+// Aktuelle Position des Spielers
         int meinX = spielerPosX[spielerNummer];
         int meinY = spielerPosY[spielerNummer];
 
-        // Sichtbare Gegner für das gesamte Team ermitteln
+// Sichtbare Gegner für das gesamte Team ermitteln
         int[] sichtbareGegner = new int[4];
         int anzahlSichtbareGegner = 0;
 
@@ -224,7 +218,7 @@ public class Farben {
             }
         }
 
-        // Nächsten sichtbaren Gegner für diesen Spieler finden
+// Nächsten sichtbaren Gegner für diesen Spieler finden
         int zielGegner = -1;
         int minDistanz = Integer.MAX_VALUE;
 
@@ -237,7 +231,7 @@ public class Farben {
             }
         }
 
-        // Entscheidung: Angriff oder Färben?
+// Entscheidung: Angriff oder Färben?
         boolean angriffsModus = false;
 
         if (zielGegner != -1) {
@@ -258,7 +252,7 @@ public class Farben {
             }
         }
 
-        // Bewegungsrichtungen: [dx, dy]
+// Bewegungsrichtungen: [dx, dy]
         int[][] richtungen = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
         int besteDx = 0, besteDy = 0;
         int besteBewertung = Integer.MIN_VALUE;
@@ -342,7 +336,7 @@ public class Farben {
             }
         }
 
-        // Bewegung ausführen
+// Bewegung ausführen
         if (besteBewertung > Integer.MIN_VALUE) {
             int neuesX = meinX + besteDx;
             int neuesY = meinY + besteDy;
@@ -364,6 +358,8 @@ public class Farben {
             spielerPosY[spielerNummer] = neuesY;
             spielfeld[neuesX][neuesY] = eigenesTeam;
         }
+
+
     }
 
     /**
@@ -372,22 +368,39 @@ public class Farben {
      */
     public static void zugZwei(int spielerNummer) {
         //Variablen
-        int importanceScore = 0; //Wichtigkeit einen Gegner anzugreifen oder Feld + gleich Feld - gleich Gegner
-        boolean sichtbareGegner = false; // Gegner da -> ja nein?
-        boolean sichtbareFarbe = false; // Andere Farbe sichtbar -> ja nein?
 
-        //Taktiken
-        boolean flaechePushen = false;
-        boolean gegnerJagen = false;
-        boolean swat = false;
+        //Feldwerte Gewichtung (Standard kann verändert werden bei Taktiken)
+        int wand = 0;
+        int mate = 0;
+        int mateFarbe = 1;
+        int gegnerFarbe = 4;
+        int gegner = 5;
+        int leer = 7;
+        int unbekannt = 2;
 
-        // Aktuelle Position des Spielers
-        int meinX = spielerPosX[spielerNummer];
-        int meinY = spielerPosY[spielerNummer];
+        //Bewegungslogik
+        int distanz = 1000;
+
+
+        //Taktik Bonus rechnung
+        if (flaechePushen) {
+            leer += 2;
+            gegnerFarbe += 6;
+            gegner -= 2;
+        }
+        else if (gegnerJagen) {
+            leer --;
+            gegnerFarbe += 1;
+            gegner += 3;
+        }
+        else if (search) { //Nicht fertig
+            gegner ++;
+            gegnerFarbe ++;
+        }
 
         /*
         Übersetzungen:
-        10 Höchste Priorität
+        10 höchste Priorität
         0 Auslassen
          */
         int[][] sichtfeld = new int[5][5];
@@ -395,48 +408,578 @@ public class Farben {
         int spielerX = spielerPosX[spielerNummer];
         int spielerY = spielerPosY[spielerNummer];
 
+        int wert;
+
+        //Erstellung von Heatmap und Sichtfeld
         for (int i = 0; i < 5; i++) {
             for (int j = 0; j < 5; j++) {
 
-                // Offset: -2 bis +2
                 int feldX = spielerX + i - 2;
                 int feldY = spielerY + j - 2;
 
-                // Bounds-Check
                 if (feldX >= 0 && feldX < spielfeld.length &&
                         feldY >= 0 && feldY < spielfeld[0].length) {
 
-                    sichtfeld[i][j] = mapCharToInt(spielfeld[feldX][feldY]);
-                    teamHeatmap[feldX][feldY] += mapCharToInt(spielfeld[feldX][feldY]);
+                    char c = spielfeld[feldX][feldY];
+
+                    // Mapping
+                    if (c == '8') {          // Wand
+                        wert = wand;
+                    } else if (c == 'O') {   // Spieler Team O (Eigener Spieler)
+                        wert = mate;
+                    } else if (c == '9') {   // Farbe Team O
+                        wert = mateFarbe;
+                    } else if (c == 'P') {   // Spieler Team P (Gegnerischer Spieler)
+                        wert = gegner;
+                    } else if (c == '7') {   // Farbe Team P
+                        wert = gegnerFarbe;
+                    } else {                 // leer / unbekannt
+                        wert = leer;
+                    }
+                    sichtfeld[i][j] = wert;
+
+                    teamHeatmap[feldX][feldY] = wert;
 
                 } else {
-                    sichtfeld[i][j] = 0; // außerhalb des Spielfelds
+                    sichtfeld[i][j] = 0;
                 }
             }
         }
 
-        if (heatmapFertig != true) {
-            return;
+
+        if (flaechePushen) {
+            //Lokale best places
+            int[] lokaleFelderX = new int[25];
+            int[] lokaleFelderY = new int[25];
+
+            int counter = 0;
+
+            int bestDist = Integer.MAX_VALUE;
+            int bestX = -1;
+            int bestY = -1;
+
+            //Sichtfeld basiert
+            for (int i = 0; i < sichtfeld.length; i++) {
+                for (int j = 0; j < sichtfeld[0].length; j++) {
+
+                    int index = i * sichtfeld[0].length + j;
+
+                    if (sichtfeld[i][j] == 10) {
+                        int d = Math.abs(i - 2) + Math.abs(j - 2);
+
+                        if (d < distanz && d > 0) {
+                            distanz = d;
+
+                            bestX = i - 2;
+                            bestY = j - 2;
+
+                            lokaleFelderX[index] = i - 2;
+                            lokaleFelderY[index] = j - 2;
+
+                            System.out.println("Gegner Feld");
+                            counter++;
+                        }
+                    } else {
+                        lokaleFelderX[index] = 0;
+                        lokaleFelderY[index] = 0;
+                    }
+                }
+            }
+
+            if (counter == 0) {
+                for (int i = 0; i < sichtfeld.length; i++) {
+                    for (int j = 0; j < sichtfeld[0].length; j++) {
+
+                        int index = i * sichtfeld[0].length + j;
+
+                        if (sichtfeld[i][j] == 9) {
+                            int d = Math.abs(i - 2) + Math.abs(j - 2);
+
+                            if (d < distanz && d > 0) {
+                                distanz = d;
+
+                                bestX = i - 2;
+                                bestY = j - 2;
+
+                                lokaleFelderX[index] = i - 2;
+                                lokaleFelderY[index] = j - 2;
+
+                                System.out.println("Leeres Feld");
+                                counter++;
+                            }
+                        } else {
+                            lokaleFelderX[index] = 0;
+                            lokaleFelderY[index] = 0;
+                        }
+                    }
+                }
+            }
+
+            if (counter == 0) {
+                for (int i = 0; i < sichtfeld.length; i++) {
+                    for (int j = 0; j < sichtfeld[0].length; j++) {
+
+                        int index = i * sichtfeld[0].length + j;
+
+                        if (sichtfeld[i][j] == 3) {
+                            int d = Math.abs(i - 2) + Math.abs(j - 2);
+
+                            if (d < distanz && d > 0) {
+                                distanz = d;
+
+                                bestX = i - 2;
+                                bestY = j - 2;
+
+                                lokaleFelderX[index] = i - 2;
+                                lokaleFelderY[index] = j - 2;
+
+                                System.out.println("Gegner");
+                                counter++;
+                            }
+                        } else {
+                            lokaleFelderX[index] = 0;
+                            lokaleFelderY[index] = 0;
+                        }
+                    }
+                }
+            }
+
+            //Teamheatmap Fallback
+            if (counter == 0) {
+                int[] heatFelderX = new int[teamHeatmap.length * teamHeatmap[0].length];
+                int[] heatFelderY = new int[teamHeatmap.length * teamHeatmap[0].length];
+
+                for (int i = 0; i < teamHeatmap.length; i++) {
+                    for (int j = 0; j < teamHeatmap[0].length; j++) {
+
+                        int index = i * teamHeatmap[0].length + j;
+
+                        if (teamHeatmap[i][j] == 9) {
+                            int d = Math.abs(i) + Math.abs(j);
+
+                            if (d < distanz && d > 0) {
+                                distanz = d;
+
+                                bestX = i;
+                                bestY = j;
+
+                                heatFelderX[index] = i;
+                                heatFelderY[index] = j;
+
+                                System.out.println("Leeres Feld Teamheatmap");
+                                counter++;
+                            }
+                        } else {
+                            heatFelderX[index] = 0;
+                            heatFelderY[index] = 0;
+                        }
+                    }
+                }
+
+                if (counter == 0) {
+                    for (int i = 0; i < teamHeatmap.length; i++) {
+                        for (int j = 0; j < teamHeatmap[0].length; j++) {
+
+                            int index = i * teamHeatmap[0].length + j;
+
+                            if (teamHeatmap[i][j] == 6) {
+                                int d = Math.abs(i) + Math.abs(j);
+
+                                if (d < distanz && d > 0) {
+                                    distanz = d;
+
+                                    bestX = i;
+                                    bestY = j;
+
+                                    heatFelderY[index] = i;
+                                    heatFelderY[index] = j;
+
+                                    System.out.println("Gegner Feld Teamheatmap");
+                                    counter++;
+                                }
+                            } else {
+                                heatFelderX[index] = 0;
+                                heatFelderY[index] = 0;
+                            }
+                        }
+                    }
+                }
+                if (counter == 0) {
+                    for (int i = 0; i < teamHeatmap.length; i++) {
+                        for (int j = 0; j < teamHeatmap[0].length; j++) {
+
+                            int index = i * teamHeatmap[0].length + j;
+
+                            if (teamHeatmap[i][j] == 3) {
+                                int d = Math.abs(i) + Math.abs(j);
+
+                                if (d < distanz && d > 0) {
+                                    distanz = d;
+
+                                    bestX = i;
+                                    bestY = j;
+
+                                    heatFelderX[index] = i;
+                                    heatFelderY[index] = j;
+
+                                    System.out.println("Gegner Teamheatmap");
+                                    counter++;
+                                }
+                            } else {
+                                heatFelderX[index] = 0;
+                                heatFelderY[index] = 0;
+                            }
+                        }
+                    }
+                }
+
+                //Bewegung Teamheatmap art
+                if (bestX >= 0 && bestY >= 0) {
+                    // Alte Position leeren
+                    int altX = spielerPosX[spielerNummer];
+                    int altY = spielerPosY[spielerNummer];
+                    spielfeld[altX][altY] = '9';
+
+                    if (spielfeld[bestX][bestY] == '8') {
+                    }else {
+                    // Spieler verschieben
+                    spielerPosX[spielerNummer] = bestX;
+                    spielerPosY[spielerNummer] = bestY;
+                    spielfeld[bestX][bestY] = 'O';
+                    }
+                } else {
+                    System.out.println("Kein gültiges Teamheatmap-Ziel gefunden, Bewegung übersprungen.");
+                }
+
+
+            }
+            //Normale Bewegung
+            else{
+                if (spielfeld[spielerPosX[spielerNummer] + bestX][spielerPosY[spielerNummer] + bestY] == '8') {
+                }
+                else {
+                    int altX = spielerPosX[spielerNummer];
+                    int altY = spielerPosY[spielerNummer];
+
+                    spielerPosX[spielerNummer] += bestX;
+                    spielerPosY[spielerNummer] += bestY;
+
+                    spielfeld[spielerPosX[spielerNummer]][spielerPosY[spielerNummer]] = 'O';
+
+                    spielfeld[altX][altY] = '9';
+                }
+            }
+
+        }
+        else if (gegnerJagen) {
+            int[] lokaleFelderX = new int[25];
+            int[] lokaleFelderY = new int[25];
+
+            int counter = 0;
+
+            int bestDist = Integer.MAX_VALUE;
+            int bestX = -1;
+            int bestY = -1;
+
+            //Sichtfeld suche
+            for (int i = 0; i < sichtfeld.length; i++) {
+                for (int j = 0; j < sichtfeld[0].length; j++) {
+
+                    int index = i * sichtfeld[0].length + j;
+
+                    if (sichtfeld[i][j] == 8) {
+                        int d = Math.abs(i - 2) + Math.abs(j - 2);
+
+                        if (d < distanz && d > 0) {
+                            distanz = d;
+
+                            bestX = i - 2;
+                            bestY = j - 2;
+
+                            lokaleFelderX[index] = i - 2;
+                            lokaleFelderY[index] = j - 2;
+
+                            System.out.println("Gegner");
+                            counter++;
+                        }
+                    } else {
+                        lokaleFelderX[index] = 0;
+                        lokaleFelderY[index] = 0;
+                    }
+                }
+            }
+
+            if (counter == 0) {
+                for (int i = 0; i < sichtfeld.length; i++) {
+                    for (int j = 0; j < sichtfeld[0].length; j++) {
+
+                        int index = i * sichtfeld[0].length + j;
+
+                        if (sichtfeld[i][j] == 5) {
+                            int d = Math.abs(i - 2) + Math.abs(j - 2);
+
+                            if (d < distanz && d > 0) {
+                                distanz = d;
+
+                                bestX = i - 2;
+                                bestY = j - 2;
+
+                                lokaleFelderX[index] = i - 2;
+                                lokaleFelderY[index] = j - 2;
+
+                                System.out.println("Gegner Farbe");
+                                counter++;
+                            }
+                        } else {
+                            lokaleFelderX[index] = 0;
+                            lokaleFelderY[index] = 0;
+                        }
+                    }
+                }
+            }
+
+            //Teamheatmap Fallback
+            if (counter == 0) {
+                int[] heatFelderX = new int[teamHeatmap.length * teamHeatmap[0].length];
+                int[] heatFelderY = new int[teamHeatmap.length * teamHeatmap[0].length];
+
+                for (int i = 0; i < teamHeatmap.length; i++) {
+                    for (int j = 0; j < teamHeatmap[0].length; j++) {
+
+                        int index = i * teamHeatmap[0].length + j;
+
+                        if (teamHeatmap[i][j] == 8) {
+                            int d = Math.abs(i) + Math.abs(j);
+
+                            if (d < distanz && d > 0) {
+                                distanz = d;
+
+                                bestX = i;
+                                bestY = j;
+
+                                heatFelderX[index] = i;
+                                heatFelderY[index] = j;
+
+                                System.out.println("Gegner Teamheatmap");
+                                counter++;
+                            }
+                        } else {
+                            heatFelderX[index] = 0;
+                            heatFelderY[index] = 0;
+                        }
+                    }
+                }
+
+                if (counter == 0) {
+                    for (int i = 0; i < teamHeatmap.length; i++) {
+                        for (int j = 0; j < teamHeatmap[0].length; j++) {
+
+                            int index = i * teamHeatmap[0].length + j;
+
+                            if (teamHeatmap[i][j] == 5) {
+                                int d = Math.abs(i) + Math.abs(j);
+
+                                if (d < distanz && d > 0) {
+                                    distanz = d;
+
+                                    bestX = i;
+                                    bestY = j;
+
+                                    heatFelderX[index] = i;
+                                    heatFelderY[index] = j;
+
+                                    System.out.println("Gegner Farbe Teamheatmap");
+                                    counter++;
+                                }
+                            } else {
+                                heatFelderX[index] = 0;
+                                heatFelderY[index] = 0;
+                            }
+                        }
+                    }
+                }
+
+                //Bewegung Teamheatmap art
+                if (bestX >= 0 && bestY >= 0) {
+                    if (spielfeld[bestX][bestY] == '8') {
+
+                    }
+                    else {
+                        // Alte Position leeren
+                        int altX = spielerPosX[spielerNummer];
+                        int altY = spielerPosY[spielerNummer];
+                        spielfeld[altX][altY] = '9';
+
+                        // Spieler verschieben
+                        spielerPosX[spielerNummer] = bestX;
+                        spielerPosY[spielerNummer] = bestY;
+                        spielfeld[bestX][bestY] = 'O';
+                    }
+                } else {
+                    System.out.println("Kein gültiges Teamheatmap-Ziel gefunden, Bewegung übersprungen.");
+                }
+
+
+            }
+            //Normale Bewegung nach Sichtfeld
+            else{
+                if (spielfeld[spielerPosX[spielerNummer] + bestX][spielerPosY[spielerNummer] + bestY] == '8') {
+
+                }
+                int altX = spielerPosX[spielerNummer];
+                int altY = spielerPosY[spielerNummer];
+
+                spielerPosX[spielerNummer] += bestX;
+                spielerPosY[spielerNummer] += bestY;
+
+                spielfeld[spielerPosX[spielerNummer]][spielerPosY[spielerNummer]] = 'O';
+
+                spielfeld[altX][altY] = '9';
+            }
+        }
+
+        else if (search) {
+            int besterDist = Integer.MAX_VALUE;
+            int moveX = 0;
+            int moveY = 0;
+
+            // Durchs 5x5-Sichtfeld schauen
+            for (int i = -2; i <= 2; i++) {
+                for (int j = -2; j <= 2; j++) {
+                    int x = spielerPosX[spielerNummer] + i;
+                    int y = spielerPosY[spielerNummer] + j;
+
+                    if (x >= 0 && x < teamHeatmap.length && y >= 0 && y < teamHeatmap[0].length) {
+                        int wert3 = teamHeatmap[x][y];
+
+                        // Suche nach nicht-eigenen Feldern
+                        if (wert3 != 9 && wert3 != 6) {
+                            int dist = Math.abs(i) + Math.abs(j); // Manhattan-Distanz
+                            if (dist < besterDist && dist > 0) {
+                                besterDist = dist;
+                                moveX = i;
+                                moveY = j;
+                            }
+                        }
+                    }
+                }
+            }
+
+            // Bewegung durchführen
+            if (spielfeld[spielerPosX[spielerNummer] + moveX][spielerPosY[spielerNummer] + moveY] == '8') {
+            }
+            else {
+                int altX = spielerPosX[spielerNummer];
+                int altY = spielerPosY[spielerNummer];
+
+                spielerPosX[spielerNummer] += moveX;
+                spielerPosY[spielerNummer] += moveY;
+
+                spielfeld[spielerPosX[spielerNummer]][spielerPosY[spielerNummer]] = 'O';
+                spielfeld[altX][altY] = '9'; // vorheriges Feld wieder als eigene Farbe markieren
+            }
+        }
+
+        //Taktik switchen
+        int eigeneFelderHeat = 0;
+        int gegnerFelderHeat = 0;
+        int leereFelder = 0;
+
+        for (int i = 0; i < breite; i++) {
+            for (int j = 0; j < laenge; j++) {
+                if (teamHeatmap[i][j] == 8 || teamHeatmap[i][j] == 5) {
+                    gegnerFelderHeat ++;
+                }
+                else if (teamHeatmap[i][j] == 9 || teamHeatmap[i][j] == 6) {
+                    eigeneFelderHeat ++;
+                }
+                else if (teamHeatmap[i][j] == 3) {}
+                else {
+                    leereFelder ++;
+                }
+            }
+        }
+
+        // Prozentwerte berechnen
+        // Für jeden Spieler:
+        int sichtRadius = 2; // 5x5 Sichtfeld
+        int eigeneFelder = 0;
+        int gegnerFelder = 0;
+        int leerFelder = 0;
+
+        int meinX = spielerPosX[spielerNummer];
+        int meinY = spielerPosY[spielerNummer];
+
+        for (int i = -sichtRadius; i <= sichtRadius; i++) {
+            for (int j = -sichtRadius; j <= sichtRadius; j++) {
+                int x = meinX + i;
+                int y = meinY + j;
+
+                if (x >= 0 && x < teamHeatmap.length && y >= 0 && y < teamHeatmap[0].length) {
+                    int wert2 = teamHeatmap[x][y];
+
+                    if (wert2 == 9 || wert2 == 6) eigeneFelder++;
+                    else if (wert2 == 8 || wert2 == 5 || wert2 == 3) gegnerFelder++;
+                    else leerFelder++;
+                }
+            }
+        }
+
+        int gesamt = eigeneFelder + gegnerFelder + leerFelder;
+
+        double eigeneProzent = (eigeneFelder / (double) gesamt) * 100.0;
+        double gegnerProzent = (gegnerFelder / (double) gesamt) * 100.0;
+        double leereProzent = (leerFelder / (double) gesamt) * 100.0;
+
+        System.out.println("Lokale Sichtfeldwerte:");
+        System.out.println("Eigene: " + eigeneProzent + "%");
+        System.out.println("Gegner: " + gegnerProzent + "%");
+        System.out.println("Leer: " + leereProzent + "%");
+
+
+        // Taktik basierend auf Anteilen
+        if (eigeneProzent > 50) {
+            search = true;
+            flaechePushen = false;
+            gegnerJagen = false;
+            System.out.println("SEARCH aktiv!");
+            System.out.print("\n\n\n\n\n\n");
+            searchCount ++;
+            System.out.println("SC " +  searchCount);
+        } else if (gegnerProzent > 20) {
+            gegnerJagen = true;
+            flaechePushen = false;
+            search = false;
+            System.out.println("GEGNER JAGEN!");
+            System.out.print("\n\n\n\n\n\n");
+            gegegnerJagenCount ++;
+            System.out.println("GC " +  gegegnerJagenCount);
+        } else if (leereProzent > 50) {
+            flaechePushen = true;
+            gegnerJagen = false;
+            search = false;
+            System.out.println("FLÄCHE PUSHEN!");
+            System.out.print("\n\n\n\n\n\n");
+            flaechePushenCount ++;
+            System.out.println("FC" + flaechePushenCount);
         }
 
 
-    }
 
-    private static int mapCharToInt(char c) {
-        return switch (c) {
-            case '8' -> 0;
-            case 'P' -> 1;
-            case '7' -> 3;
-            case '9' -> 8;
-            case 'O' -> 6;
-            default  -> 0; // außerhalb / leer
-        };
+        if (flaechePushen) {
+            System.out.println("fläche pushen!");
+        } else if (gegnerJagen) {
+            System.out.println("gegner jagen!");
+        } else if (search) {
+            System.out.println("search!");
+        }
+
+
     }
 
     public static void schritt() {
         //Heatmap reset
         teamHeatmap = new int[laenge][breite];
-
 
         // Reihenfolge für diesen Spielschritt generieren
         String reihenfolgeString = reihenfolge();
@@ -543,7 +1086,15 @@ public class Farben {
         sv.start();
         */
 
-        simulation(50); // Führt 50 Spielschritte durch
+        simulation(500); // Führt 50 Spielschritte durch
+
+
+        for (int i = 0; i < laenge; i++) {
+            for (int j = 0; j < breite; j++) {
+                System.out.printf("%2d ", teamHeatmap[i][j]);
+            }
+            System.out.println();
+        }
     }
 
 }
